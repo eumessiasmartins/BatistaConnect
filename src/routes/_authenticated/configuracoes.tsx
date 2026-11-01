@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Building2, Loader2, Palette, Pencil, Plus, ShieldCheck, Users } from "lucide-react";
+import { Building2, Loader2, Pencil, Plus, ShieldCheck, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,6 @@ function Settings() {
     me.can("company.manage") && "empresa",
     me.can("collaborators.manage") && "colaboradores",
     me.isSuper && "permissoes",
-    "tema",
   ].filter(Boolean) as string[];
   if (!tabs.length) return <p className="text-muted-foreground">Você não tem acesso às configurações.</p>;
 
@@ -45,19 +44,17 @@ function Settings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl text-foreground">Configurações</h1>
-        <p className="text-sm text-muted-foreground">Gerencie a empresa, as pessoas, permissões e a aparência.</p>
+        <p className="text-sm text-muted-foreground">Gerencie a empresa, as pessoas e o que cada perfil pode fazer.</p>
       </div>
       <Tabs defaultValue={tabs[0]}>
-        <TabsList className="rounded-full bg-secondary p-1 flex-wrap h-auto">
+        <TabsList className="rounded-full bg-secondary p-1">
           {tabs.includes("empresa") && <TabsTrigger value="empresa" className="rounded-full"><Building2 className="h-4 w-4" /> Empresa</TabsTrigger>}
           {tabs.includes("colaboradores") && <TabsTrigger value="colaboradores" className="rounded-full"><Users className="h-4 w-4" /> Colaboradores</TabsTrigger>}
           {tabs.includes("permissoes") && <TabsTrigger value="permissoes" className="rounded-full"><ShieldCheck className="h-4 w-4" /> Permissões</TabsTrigger>}
-          <TabsTrigger value="tema" className="rounded-full"><Palette className="h-4 w-4" /> Tema</TabsTrigger>
         </TabsList>
         <TabsContent value="empresa"><CompanyForm /></TabsContent>
         <TabsContent value="colaboradores"><Collaborators /></TabsContent>
         <TabsContent value="permissoes"><Permissions /></TabsContent>
-        <TabsContent value="tema"><ThemeManager /></TabsContent>
       </Tabs>
     </div>
   );
@@ -227,58 +224,6 @@ function CollabDialog({ value, onClose }: { value: Collab | "new"; onClose: () =
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function ThemeManager() {
-  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem("app_color_theme") || "blue");
-
-  const themes = [
-    { id: "blue", label: "Azul (Padrão)", colorClass: "bg-blue-600" },
-    { id: "yellow", label: "Amarelo", colorClass: "bg-amber-500" },
-    { id: "green", label: "Verde", colorClass: "bg-emerald-600" },
-    { id: "gray", label: "Cinza", colorClass: "bg-slate-600" },
-    { id: "red", label: "Vermelho", colorClass: "bg-rose-600" },
-  ];
-
-  const handleSelectTheme = (id: string) => {
-    setCurrentTheme(id);
-    localStorage.setItem("app_color_theme", id);
-    document.documentElement.setAttribute("data-theme", id);
-    toast.success("Tema alterado com sucesso!");
-  };
-
-  return (
-    <Panel>
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-medium text-foreground">Cores do Tema</h3>
-          <p className="text-sm text-muted-foreground">Escolha a cor principal que será aplicada em toda a interface do sistema.</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-          {themes.map((t) => {
-            const isSelected = currentTheme === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() => handleSelectTheme(t.id)}
-                className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${
-                  isSelected ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm" : "border-border hover:bg-muted/50"
-                }`}
-              >
-                <span className={`h-8 w-8 rounded-full ${t.colorClass} shrink-0 shadow-inner flex items-center justify-center text-white font-bold text-xs`}>
-                  {isSelected ? "✓" : ""}
-                </span>
-                <div>
-                  <p className="font-medium text-foreground text-sm">{t.label}</p>
-                  <p className="text-xs text-muted-foreground">{isSelected ? "Ativo" : "Clique para ativar"}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </Panel>
   );
 }
 
