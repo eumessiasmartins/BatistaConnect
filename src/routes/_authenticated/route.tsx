@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
-import { LogOut, Newspaper, Settings } from "lucide-react";
+import { LogOut, Newspaper, Settings, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -29,6 +30,31 @@ import {
 
 function AppLayout() {
   const { data: me } = useMe();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const isDarkMode = document.documentElement.classList.contains("dark") || 
+      localStorage.getItem("theme") === "dark" || 
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setIsDark(isDarkMode);
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
   const navigate = useNavigate();
   const { data: company } = useQuery({
     queryKey: ["company"],
@@ -97,6 +123,14 @@ function AppLayout() {
           <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card/80 px-6 backdrop-blur">
             <SidebarTrigger />
             <div className="ml-auto flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                aria-label="Alternar tema"
+                className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                title={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+              >
+                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
               <Avatar className="h-8 w-8 sm:hidden">
                 <AvatarFallback className="bg-primary-soft text-primary">{initials(me?.profile?.full_name)}</AvatarFallback>
               </Avatar>
