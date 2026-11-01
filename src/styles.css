@@ -58,6 +58,43 @@
 :root {
   --radius: 1rem;
   --background: oklch(0.975 0.012 240);
+}
+
+html[data-theme="yellow"] {
+  --primary: oklch(0.72 0.16 75);
+  --primary-foreground: oklch(0.2 0.05 75);
+  --primary-soft: oklch(0.95 0.06 75);
+  --ring: oklch(0.75 0.15 75);
+  --sidebar-primary: oklch(0.72 0.16 75);
+}
+html[data-theme="green"] {
+  --primary: oklch(0.58 0.14 150);
+  --primary-foreground: oklch(0.99 0.005 150);
+  --primary-soft: oklch(0.93 0.05 150);
+  --ring: oklch(0.65 0.12 150);
+  --sidebar-primary: oklch(0.58 0.14 150);
+}
+html[data-theme="gray"] {
+  --primary: oklch(0.45 0.01 250);
+  --primary-foreground: oklch(0.99 0.005 250);
+  --primary-soft: oklch(0.93 0.01 250);
+  --ring: oklch(0.55 0.01 250);
+  --sidebar-primary: oklch(0.45 0.01 250);
+}
+html[data-theme="red"] {
+  --primary: oklch(0.58 0.2 25);
+  --primary-foreground: oklch(0.99 0.005 25);
+  --primary-soft: oklch(0.94 0.06 25);
+  --ring: oklch(0.65 0.18 25);
+  --sidebar-primary: oklch(0.58 0.2 25);
+}
+html[data-theme="blue"] {
+  --primary: oklch(0.58 0.11 245);
+  --primary-foreground: oklch(0.99 0.005 240);
+  --primary-soft: oklch(0.93 0.04 240);
+  --ring: oklch(0.7 0.09 245);
+  --sidebar-primary: oklch(0.58 0.11 245);
+
   --foreground: oklch(0.27 0.04 255);
   --card: oklch(0.995 0.004 240);
   --card-foreground: oklch(0.27 0.04 255);

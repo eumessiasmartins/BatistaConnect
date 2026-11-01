@@ -33,13 +33,15 @@ function AppLayout() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem("app_color_theme") || "blue";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+
     const checkTheme = () => {
       const isDarkMode = document.documentElement.classList.contains("dark");
       setIsDark(isDarkMode);
     };
     checkTheme();
     
-    // Observer to keep in sync if changed elsewhere
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
